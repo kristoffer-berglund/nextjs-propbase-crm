@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:18
+    # Ger containern ett unikt namn baserat på mappen den ligger i
+    container_name: book-assignment-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: devuser
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_DB: devdb
+    ports:
+      - "5432:5432"
+    volumes:
+      # Skapar pgdata inuti just denna projektmapp
+      - ./pgdata:/var/lib/postgresql/data/pgdata
+
+  app:
+    image: node:24
+    container_name: book-assignment-app
+    restart: unless-stopped
+    working_dir: /home/node/app
+    volumes:
+      - .:/home/node/app
+    ports:
+      - "3000:3000"
+      - "5555:5555" # För Prisma Studio
+    # Om du inte har hunnit köra 'npm init' än, ändra till "sleep infinity" 
+    # för att förhindra att den kraschar/startar om (restarting).
+    command: "npm run dev"
+    depends_on:
+      - db
