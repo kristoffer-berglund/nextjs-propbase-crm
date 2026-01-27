@@ -47,3 +47,6 @@ pgdata/
 
 # Log files
 *.log
+
+# VS Code
+/.vscode/
