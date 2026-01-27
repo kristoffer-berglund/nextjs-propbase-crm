@@ -15,9 +15,6 @@ export const auth = betterAuth({
         required: false,
       },
     },
-    fields: {
-      name: "fullName",
-    },
   },
 
   emailAndPassword: {
@@ -26,6 +23,7 @@ export const auth = betterAuth({
     sendResetPassword: async (data) => {
       console.log("Password Reset:", data.url);
     },
+    autoSignIn: false,
   },
   emailVerification: {
     sendOnSignIn: true,
