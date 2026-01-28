@@ -50,3 +50,5 @@ pgdata/
 
 # VS Code
 /.vscode/
+
+docker-compose.yml
