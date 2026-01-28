@@ -43,7 +43,7 @@ export default function RootLayout({
           <footer className="">
             <Footer />
           </footer>
-          <Toaster />
+          <Toaster richColors={true} />
         </div>
       </body>
     </html>
