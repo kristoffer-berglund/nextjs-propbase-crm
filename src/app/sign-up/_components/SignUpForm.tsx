@@ -8,9 +8,11 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { authClient } from "@/lib/auth-client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
@@ -34,6 +36,8 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>;
 
 function SignUpForm() {
+  const [loading, setLoading] = useState(false);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,6 +51,8 @@ function SignUpForm() {
   const router = useRouter();
 
   async function handleSubmit(values: FormValues) {
+    setLoading(true);
+
     const { error } = await authClient.signUp.email({
       email: values.email,
       name: values.name,
@@ -62,6 +68,9 @@ function SignUpForm() {
       duration: 9000,
       position: "top-center",
     });
+
+    setLoading(false);
+
     router.push("/sign-in");
   }
 
@@ -137,7 +146,15 @@ function SignUpForm() {
             )}
           />
           <Field>
-            <Button type="submit">Sign Up</Button>
+            <Button type="submit" disabled={loading}>
+              {!loading && (
+                <>
+                  <Spinner />
+                  <span className="sr-only">Loading...</span>
+                </>
+              )}
+              Sign Up
+            </Button>
           </Field>
         </FieldGroup>
       </form>
