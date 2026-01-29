@@ -147,7 +147,7 @@ function SignUpForm() {
           />
           <Field>
             <Button type="submit" disabled={loading}>
-              {!loading && (
+              {loading && (
                 <>
                   <Spinner />
                   <span className="sr-only">Loading...</span>
