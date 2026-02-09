@@ -21,8 +21,9 @@ const googleSans = Google_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Book Assignment",
-  description: "Assignment of books",
+  title: "PropBase",
+  description:
+    "A specialized CRM & Inventory management system for Real Estate Agents.",
 };
 
 export default function RootLayout({

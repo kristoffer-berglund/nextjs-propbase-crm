@@ -3,7 +3,7 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Grid2X2, Table } from "lucide-react";
 
-export default function BookToogle() {
+export default function ToggleDisplay() {
   return (
     <nav>
       <ToggleGroup variant="outline" type="single" defaultValue="grid">

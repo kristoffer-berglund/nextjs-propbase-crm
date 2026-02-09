@@ -9,7 +9,7 @@ export default async function SignInPage() {
   });
 
   if (session) {
-    redirect("/create-book");
+    redirect("/create-property");
   }
 
   return (

@@ -15,20 +15,21 @@ const prisma = new PrismaClient({
 
 async function main() {
   console.log("Rensar databasen...");
-  await prisma.book.deleteMany();
+  await prisma.property.deleteMany();
 
-  console.log("Seedning startar: Skapar 20 böcker...");
+  console.log("Seedning startar: Skapar 20 properties...");
 
-  const books = Array.from({ length: 20 }).map(() => ({
-    title: faker.book.title(),
-    author: faker.book.author(),
-    published: faker.date.past({ years: 20 }),
-    isbn: faker.commerce.isbn(),
+  const properties = Array.from({ length: 20 }).map(() => ({
+    address: faker.location.streetAddress(),
+    agent: faker.person.fullName(),
+    price: Number(faker.finance.amount(100000, 2000000, 0)),
+    listingNumber: faker.string.alphanumeric(10),
+    description: faker.lorem.paragraph(),
   }));
 
-  for (const book of books) {
-    await prisma.book.create({
-      data: book,
+  for (const p of properties) {
+    await prisma.property.create({
+      data: p,
     });
   }
 

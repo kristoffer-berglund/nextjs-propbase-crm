@@ -1,5 +1,4 @@
 "use client";
-
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -11,40 +10,58 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { BookFormValues, bookSchema } from "@/schemas/book";
-import createBookAction from "../_actions/create-book";
+import updatePropertyAction from "../_actions/update-property";
+import { PropertyFormValues, propertySchema } from "@/schemas/property";
 
-export default function CreateBookForm() {
+type Property = {
+  id: string;
+  address: string;
+  agent: string;
+  price: number;
+  listingNumber?: string | null;
+  description?: string | null;
+};
+
+export default function EditPropertyForm({ property }: { property: Property }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const form = useForm<BookFormValues>({
-    resolver: zodResolver(bookSchema),
+  const form = useForm<PropertyFormValues>({
+    resolver: zodResolver(propertySchema),
+    defaultValues: {
+      id: property.id,
+      address: property.address,
+      agent: property.agent,
+      price: Number(property.price),
+      listingNumber: property.listingNumber ?? undefined,
+      description: property.description ?? undefined,
+    },
   });
 
-  async function onSubmit(formData: BookFormValues) {
+  async function onSubmit(formData: PropertyFormValues) {
     setLoading(true);
 
-    const validate = bookSchema.safeParse(formData);
+    const validate = propertySchema.safeParse(formData);
 
     if (!validate.success) {
-      toast.error("Book could not be created", { position: "top-center" });
+      toast.error("Property could not be updated", { position: "top-center" });
+      setLoading(false);
       return validate.error;
-    } else {
-      const result = await createBookAction(formData);
+    }
 
-      if (result?.success && result?.book?.id) {
-        console.log(result);
-        toast.success("Book created successfully!", {
-          position: "top-center",
-        });
-        router.push(`/books/${result?.book?.id}`);
-      } else {
-        toast.error("Could not redirect to URL: Missing ID");
-      }
+    const result = await updatePropertyAction({
+      ...formData,
+      price: Number(formData.price),
+    });
+
+    if (result?.success) {
+      toast.success("Property updated", { position: "top-center" });
+      router.push(`/properties/${result.property.id}`);
+    } else {
+      toast.error("Property could not be updated", { position: "top-center" });
     }
     setLoading(false);
   }
@@ -53,67 +70,82 @@ export default function CreateBookForm() {
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
         <Controller
-          name="title"
+          name="address"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-title">Title</FieldLabel>
+              <FieldLabel htmlFor="form-address">Address</FieldLabel>
               <Input
                 {...field}
-                name="title"
-                id="form-title"
+                name="address"
+                id="form-address"
                 aria-invalid={fieldState.invalid}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
-
         <Controller
-          name="author"
+          name="agent"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-author">Author</FieldLabel>
+              <FieldLabel htmlFor="form-agent">Agent</FieldLabel>
               <Input
                 {...field}
-                name="author"
-                id="form-author"
+                name="agent"
+                id="form-agent"
                 aria-invalid={fieldState.invalid}
-              />
-
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-
-        <Controller
-          name="published"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-published">Published</FieldLabel>
-              <Input
-                {...field}
-                name="published"
-                id="form-published"
-                aria-invalid={fieldState.invalid}
-                type="date"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
         <Controller
-          name="isbn"
+          name="price"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-isbn">ISBN</FieldLabel>
+              <FieldLabel htmlFor="form-price">Price</FieldLabel>
               <Input
                 {...field}
-                name="isbn"
-                id="form-isbn"
+                name="price"
+                type="number"
+                id="form-price"
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        <Controller
+          name="listingNumber"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="form-listingNumber">
+                Listing Number
+              </FieldLabel>
+              <Input
+                {...field}
+                name="listingNumber"
+                id="form-listingNumber"
+                aria-invalid={fieldState.invalid}
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        <Controller
+          name="description"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="form-description">Description</FieldLabel>
+              <Input
+                {...field}
+                name="description"
+                id="form-description"
                 aria-invalid={fieldState.invalid}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -124,7 +156,7 @@ export default function CreateBookForm() {
           variant="outline"
           type="submit"
           disabled={loading}
-          arial-label="Submit"
+          aria-label="Submit"
         >
           {loading && (
             <>
