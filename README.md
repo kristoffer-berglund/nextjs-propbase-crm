@@ -6,7 +6,7 @@ Currently pivoting from a generic inventory concept to a domain-specific tool fo
 Having worked with **FasAd** and **MiMove** for 2 years, I noticed that many broker tools are clunky. 
 **Propbase** is my take on a modern, fast, and type-safe dashboard built with TypeScript/React/Next.js.
 
-## 🏗 Current Module: Property Management
+## Current Module: Property Management
 The core functionality (CRUD) allows agents to:
 - **List Properties** (replacing "Books")
 - **Assign Agents** (replacing "Authors")
