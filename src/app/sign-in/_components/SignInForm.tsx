@@ -65,7 +65,7 @@ function SignInForm() {
     }
 
     setLoading(false);
-    router.push("/create-book");
+    router.push("/create-property");
   }
   return (
     <div>

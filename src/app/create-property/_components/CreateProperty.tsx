@@ -1,5 +1,4 @@
 "use client";
-
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -11,53 +10,40 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
-import updateBookAction from "../_actions/update-book";
-import { BookFormValues, bookSchema } from "@/schemas/book";
+import { PropertyFormValues, propertySchema } from "@/schemas/property";
+import createPropertyAction from "../_actions/create-property";
 
-type Book = {
-  id: string;
-  title: string;
-  author: string;
-  published: Date;
-  isbn: string;
-};
-
-export default function EditBookForm({ book }: { book: Book }) {
+export default function CreatePropertyForm() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const form = useForm<BookFormValues>({
-    resolver: zodResolver(bookSchema),
-    defaultValues: {
-      id: book.id,
-      title: book.title,
-      author: book.author,
-      published: book.published.toLocaleDateString("sv-SE"),
-      isbn: book.isbn,
-    },
+  const form = useForm<PropertyFormValues>({
+    resolver: zodResolver(propertySchema),
   });
 
-  async function onSubmit(formData: BookFormValues) {
+  async function onSubmit(formData: PropertyFormValues) {
     setLoading(true);
 
-    const validate = bookSchema.safeParse(formData);
+    const validate = propertySchema.safeParse(formData);
 
     if (!validate.success) {
-      toast.error("Book could not be updated", { position: "top-center" });
+      toast.error("Property could not be created", { position: "top-center" });
+      setLoading(false);
       return validate.error;
-    } else {
-      const result = await updateBookAction(formData);
-      console.log(result);
+    }
+    const result = await createPropertyAction({
+      ...formData,
+      price: Number(formData.price),
+    });
 
-      if (result?.success && result?.result?.id) {
-        toast.success("Book updated successfully", { position: "top-center" });
-        router.push(`/books/${result?.result?.id}`);
-      } else {
-        toast.error("Book could not be updated", { position: "top-center" });
-      }
+    if (result?.success) {
+      toast.success("Property created", { position: "top-center" });
+      router.push("/properties");
+    } else {
+      toast.error("Property could not be created", { position: "top-center" });
     }
     setLoading(false);
   }
@@ -66,64 +52,67 @@ export default function EditBookForm({ book }: { book: Book }) {
     <form onSubmit={form.handleSubmit(onSubmit)}>
       <FieldGroup>
         <Controller
-          name="title"
+          name="address"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-title">Title</FieldLabel>
+              <FieldLabel htmlFor="form-address">Address</FieldLabel>
               <Input
                 {...field}
-                name="title"
-                id="form-title"
+                name="address"
+                id="form-address"
                 aria-invalid={fieldState.invalid}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
+
         <Controller
-          name="author"
+          name="agent"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-author">Author</FieldLabel>
+              <FieldLabel htmlFor="form-agent">Agent</FieldLabel>
               <Input
                 {...field}
-                name="author"
-                id="form-author"
+                name="agent"
+                id="form-agent"
                 aria-invalid={fieldState.invalid}
+              />
+
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Controller
+          name="price"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="form-price">Price</FieldLabel>
+              <Input
+                {...field}
+                name="price"
+                id="form-price"
+                aria-invalid={fieldState.invalid}
+                type="number"
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
         <Controller
-          name="published"
+          name="description"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-published">Published</FieldLabel>
+              <FieldLabel htmlFor="form-description">Description</FieldLabel>
               <Input
                 {...field}
-                name="published"
-                type="date"
-                id="form-published"
-                aria-invalid={fieldState.invalid}
-              />
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-        <Controller
-          name="isbn"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor="form-isbn">ISBN</FieldLabel>
-              <Input
-                {...field}
-                name="isbn"
-                id="form-isbn"
+                name="description"
+                id="form-description"
                 aria-invalid={fieldState.invalid}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -134,7 +123,7 @@ export default function EditBookForm({ book }: { book: Book }) {
           variant="outline"
           type="submit"
           disabled={loading}
-          aria-label="Submit"
+          arial-label="Submit"
         >
           {loading && (
             <>

@@ -2,12 +2,13 @@ services:
   db:
     image: postgres:18
     # Ger containern ett unikt namn baserat på mappen den ligger i
-    container_name: book-assignment-db
+    container_name: nextjs-propbase-crm-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: devuser
       POSTGRES_PASSWORD: devpassword
-      POSTGRES_DB: devdb
+      POSTGRES_DB: propbase
+      PGDATA: /var/lib/postgresql/data/pgdata # Viktigt för volymen
     ports:
       - "5432:5432"
     volumes:
@@ -16,9 +17,11 @@ services:
 
   app:
     image: node:24
-    container_name: book-assignment-app
+    container_name: nextjs-propbase-crm-app
     restart: unless-stopped
     working_dir: /home/node/app
+    environment:
+      - DATABASE_URL=postgresql://devuser:devpassword@db:5432/propbase?schema=public
     volumes:
       - .:/home/node/app
     ports:
@@ -26,6 +29,12 @@ services:
       - "5555:5555" # För Prisma Studio
     # Om du inte har hunnit köra 'npm init' än, ändra till "sleep infinity" 
     # för att förhindra att den kraschar/startar om (restarting).
-    command: "npm run dev"
+    command: >
+      sh -c "npm install &&
+             npx prisma generate &&
+             npx prisma db push &&
+             npx prisma db seed &&
+             (npx prisma studio --port 5555 --browser none &) &&
+             npm run dev -- -H 0.0.0.0"
     depends_on:
       - db

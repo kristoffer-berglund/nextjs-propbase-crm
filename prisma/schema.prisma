@@ -13,19 +13,7 @@ datasource db {
   provider = "postgresql"
 }
 
-model Book {
-  id        String   @id @default(cuid())
-  title     String
-  author    String
-  published DateTime
-  isbn      String   @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("books")
-  @@index([isbn])
-}
+// Book model removed; replaced by `Property` model below.
 
 model User {
   id            String    @id
@@ -89,6 +77,19 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model Property {
+  id          String   @id @default(uuid())
+  address     String
+  agent       String
+  price       Float
+  description String?
+  listingNumber String?   // was isbn - optional listing identifier
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("properties")
 }
 
 
