@@ -1,8 +1,21 @@
-# Next.js Book Manager
+# Propbase (Real Estate CRM)
+A specialized CRM & Property management system for Real Estate Agents.
+Currently pivoting from a generic inventory concept to a domain-specific tool for managing Property Listings and Agent assignments.
+
+## The Vision
+Having worked with **FasAd** and **MiMove** for 2 years, I noticed that many broker tools are clunky. 
+**Propbase** is my take on a modern, fast, and type-safe dashboard built with TypeScript/React/Next.js.
+
+## 🏗 Current Module: Property Management
+The core functionality (CRUD) allows agents to:
+- **List Properties** (replacing "Books")
+- **Assign Agents** (replacing "Authors")
+- **Manage Clients**
+- **Manage Status** (Active/Sold)
 
 A fullstack web application for managing books, built with modern web technologies. This project utilizes **Next.js** (App Router) for both frontend and backend, styled with **Tailwind CSS** and **Shadcn/ui**, along with **Prisma** and **PostgreSQL** for robust data management. Authentication is handled by **Better-Auth** and data validation by **Zod**.
 
-## 🛠 Tech Stack
+## Tech Stack
 
 * **Framework:** [Next.js](https://nextjs.org/) (React, TypeScript)
 * **Database:** [PostgreSQL](https://www.postgresql.org/)
@@ -13,16 +26,17 @@ A fullstack web application for managing books, built with modern web technologi
 * **UI Components:** [Shadcn/ui](https://ui.shadcn.com/)
 * **Version Control:** Git
 
-## ✨ Features
+## Features
 
 * **Secure Authentication:** User signup and login powered by Better-Auth.
-* **Book Management:** Add, edit, and delete books (CRUD operations).
+* **Property Management:** Add, edit, and delete properties (CRUD operations).
+* **Client Management:** Administrate buyer/seller status for individual properties.
 * **Data Validation:** Robust input validation using Zod schemas.
 * **Responsive Design:** Fully optimized for both mobile and desktop devices.
 * **Server-Side Rendering (SSR):** Fast loading speeds and optimized for SEO.
 * **Type Safety:** Full TypeScript support throughout the entire application.
 
-## 🚀 Getting Started
+## Getting Started
 
 Follow these steps to run the project locally.
 
@@ -69,7 +83,7 @@ Follow these steps to run the project locally.
 
     Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
 
-## 📂 Project Structure
+## Project Structure
 
 ```bash
 ├── app/                  # Next.js App Router (pages and layouts)
