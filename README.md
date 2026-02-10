@@ -13,7 +13,7 @@ The core functionality (CRUD) allows agents to:
 - **Manage Clients**
 - **Manage Status** (Active/Sold)
 
-A fullstack web application for managing books, built with modern web technologies. This project utilizes **Next.js** (App Router) for both frontend and backend, styled with **Tailwind CSS** and **Shadcn/ui**, along with **Prisma** and **PostgreSQL** for robust data management. Authentication is handled by **Better-Auth** and data validation by **Zod**. Deployment to scale with **Neon** serverless database and performance improvements using **Vercel**.
+A fullstack web application for managing books, built with modern web technologies. This project utilizes **Next.js** (App Router) for both frontend and backend, styled with **Tailwind CSS** and **Shadcn/ui**, along with **Prisma** and **PostgreSQL** for robust data management. Authentication is handled by **Better-Auth** and data validation by **Zod**. Deployment that scales with **Neon** serverless databases and reliable performance using **Vercel**.
 
 ## Tech Stack
 
